@@ -21,7 +21,7 @@ cn = "$server_ip"
 organization = "VPN SERVER" 
 expiration_days = 3650
 signing_key 
-encryption_key #only if the generated key is an RSA one 
+encryption_key 
 tls_www_server 
 _EOF_
 

@@ -1,10 +1,9 @@
 #!/bin/sh
 
 server_ip="120.27.50.254"
-echo $server_ip
 
-mkdir certs
-cd ./certs
+mkdir /opt/certs
+cd /opt/certs
 
 cat >ca.tmpl << _EOF_
 cn = "VPN CA" 
@@ -33,3 +32,5 @@ expiration_days = 9999
 signing_key 
 tls_www_client 
 _EOF_
+
+echo "Generating certs's template successfully"

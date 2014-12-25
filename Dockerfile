@@ -13,7 +13,17 @@ RUN cd /root && wget http://www.infradead.org/ocserv/download.html && export ocs
     && cd ocserv-$ocserv_version && ./configure --prefix=/usr --sysconfdir=/etc && make && make install \
     && rm -rf /root/download.html && rm -rf ocserv-*
 
+# Move local file to container
+ADD ./shell /usr/local/bin
+ADD ./conf /etc/ocserv
+
+# Add execute permission for all user
+RUN chmod a+x /usr/local/bin/*
+
 # Gernerating the CA
-ADD ./shell /usr/local/shell
-RUN cd usr/local/shell && chmod a+x ./cert-template.sh && ./cert-template.sh
+RUN cd usr/local/bin && ./cert-template.sh
 RUN certtool --generate-privkey --outfile /opt/certs/ca-key.pem && certtool --generate-self-signed --load-privkey /opt/certs/ca-key.pem --template /opt/certs/ca.tmpl --outfile /opt/certs/ca-cert.pem && certtool --generate-privkey --outfile /opt/certs/server-key.pem && certtool --generate-certificate --load-privkey /opt/certs/server-key.pem --load-ca-certificate /opt/certs/ca-cert.pem --load-ca-privkey /opt/certs/ca-key.pem --template /opt/certs/server.tmpl --outfile /opt/certs/server-cert.pem
+
+# Initialize the Ocserv VPN
+WORKDIR /etc/ocserv
+CMD [ocserv-init]

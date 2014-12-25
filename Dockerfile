@@ -14,5 +14,4 @@ RUN cd /root && wget http://www.infradead.org/ocserv/download.html && export ocs
     && rm -rf /root/download.html && rm -rf ocserv-*
 
 # Gernerating the CA
-RUN cd /root && wget https://raw.githubusercontent.com/aerok/ocserv-docker/master/cert-template.sh && chmod a+x ./cert-template.sh && ./cert-template.sh
 RUN certtool --generate-privkey --outfile ca-key.pem && certtool --generate-self-signed --load-privkey ca-key.pem --template ca.tmpl --outfile ca-cert.pem && certtool --generate-privkey --outfile server-key.pem && certtool --generate-certificate --load-privkey server-key.pem --load-ca-certificate ca-cert.pem --load-ca-privkey ca-key.pem --template server.tmpl --outfile server-cert.pem

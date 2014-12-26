@@ -31,4 +31,9 @@ listening (UDP) on [::]:443...
   * [DigitalOcean 512MB CoreOS 522.2.0 (alpha)]
 
 ## Refs
-* 
+* [openSSL命令、PKI、CA、SSL证书原理](http://www.cnblogs.com/littlehann/p/3738141.html)
+* [折腾笔记：架设OpenConnect Server给iPhone提供更顺畅的网络生活](http://bitinn.net/11084/)
+* [expect实现交互初步](http://blog.ihipop.info/2010/12/1949.html)
+* [foreach](http://wiki.tcl.tk/1018)
+* [Docker 2 -- 关于Dockerfile](http://blog.tankywoo.com/docker/2014/05/08/docker-2-dockerfile.html)
+* [iOS AnyConnect配置](http://www.brucebot.com/2014/11/how-to-setup-a-anyconnect-vpn-for-ios-with-certificate/)

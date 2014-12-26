@@ -5,7 +5,7 @@ set timeout 2
 set user [list aerok 1990917 kenzid 19930202]
 
 foreach {i j} $user {
-        spawn ocpasswd -c ./passwd $i
+        spawn ocpasswd -c /etc/ocserv/ocpasswd $i
         expect "*password*"
         send "$j\n"
         expect "*password*"

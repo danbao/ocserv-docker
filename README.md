@@ -22,3 +22,13 @@ listening (UDP) on [::]:443...
 ```
 * 安装 [AnyConnect](http://www.cisco.com/c/en/us/solutions/enterprise-networks/anyconnect-secure-mobility-solution/index.html) 客户端
 * 使用你的Server IP以及刚刚配置的用户名密码登陆即可
+
+## 信息
+* Box Size: 483.8 MB
+* 基础 Box: ubuntu:latest   (192.7 MB)
+* 测试过的环境: 
+  * [Vultr 768MB CoreOS Stable]
+  * [DigitalOcean 512MB CoreOS 522.2.0 (alpha)]
+
+## Refs
+* 

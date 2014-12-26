@@ -25,12 +25,4 @@ encryption_key
 tls_www_server 
 _EOF_
 
-cat >user.tmpl << _EOF_
-cn = "user" 
-unit = "admins" 
-expiration_days = 9999 
-signing_key 
-tls_www_client 
-_EOF_
-
 echo "Generating certs's template successfully"

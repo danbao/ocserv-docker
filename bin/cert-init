@@ -1,6 +1,6 @@
 #!/bin/sh
 
-server_ip="104.236.167.27"
+server_ip="your server IP"
 
 mkdir /opt/certs
 cd /opt/certs

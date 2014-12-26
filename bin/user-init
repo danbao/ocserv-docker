@@ -2,7 +2,7 @@
 
 set timeout 2
 
-set user [list aerok 1990917 kenzid 19930202]
+set user [list user1 password1 user2 password2]
 
 foreach {i j} $user {
         spawn ocpasswd -c /etc/ocserv/ocpasswd $i

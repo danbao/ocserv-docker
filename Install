@@ -1,3 +1,116 @@
+#!/bin/bash
+ 
+stty erase ^h
+ 
+declare value
+ 
+confirm() {
+	while [[ true ]]; do
+		printf "[Y/n]: "
+		read m
+		case $m in
+			[Yy][Ee][Ss] | [Yy] ) return 1 ;;
+			[Nn][Oo] | [Nn] ) return 0 ;;
+			* ) printf "Please answer \"yes\" or \"no\". "
+		esac
+	done
+}
+ 
+get() {
+	while [[ true ]]; do
+		read m
+		if [[ -n "$m" ]]; then
+			value=$m
+			break
+		else
+			printf "Please enter a valid parameter: "
+			continue
+		fi
+	done
+}
+
+#Set server ip address
+declare serverip
+printf "Please enter your server ip: "
+get
+serverip=$value
+printf ">> Server IP: \e[32m$serverip\e[0m\r\n\n"
+
+#Add Ocserv account
+declare username
+declare password
+while [[ true ]]; do
+	printf "Do you want to add a new user as Ocserv account? "
+	confirm
+	if [[ $? -eq 1 ]]; then
+		printf "Enter an username: "
+		get
+		username=$username" "$value
+		printf "Enter a password: "
+		get
+		password=$password" "$value
+	else
+		printf ">> All User: \e[32m$username\e[0m\r\n\n"
+		break
+	fi
+done
+
+mkdir certs bin ocserv
+
+cat << _EOF_ > certs/ca.tmpl 
+cn = "VPN CA" 
+organization = "Big Corp" 
+serial = 1 
+expiration_days = 3650 
+ca 
+signing_key 
+cert_signing_key 
+crl_signing_key 
+_EOF_
+
+cat << _EOF_ > certs/server.tmpl 
+cn = "_serverip_" 
+organization = "VPN SERVER" 
+expiration_days = 3650
+signing_key 
+encryption_key 
+tls_www_server 
+_EOF_
+
+cat << _EOF_ > bin/user-init
+#!/usr/bin/expect
+set timeout 2
+foreach u [list_username_] p [list_password_] {
+    spawn ocpasswd -c /etc/ocserv/ocpasswd \$u
+    expect "*password*"
+    send "\$p\n"
+    expect "*password*"
+    send "\$p\n"
+    expect eof
+}
+exit
+_EOF_
+
+sed -i "s/_serverip_/$serverip/g" certs/server.tmpl
+sed -i -e "s/_username_/$username/g" -e "s/_password_/$password/g" bin/user-init
+
+cat << _EOF_ > bin/ocserv-run
+#!/bin/bash
+# open ipv4 ip forward
+sysctl -w net.ipv4.ip_forward=1
+if [ ! -e /dev/net/tun ]; then
+	mkdir -p /dev/net
+	mknod /dev/net/tun c 10 200
+	chmod 600 /dev/net/tun
+fi
+# open iptables nat
+iptables -t nat -A POSTROUTING -j MASQUERADE
+iptables -A FORWARD -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu 
+# run it
+ocserv -c /etc/ocserv/ocserv.conf -f $@
+_EOF_
+
+cat << _EOF_ > ocserv/ocserv.conf
 # User authentication method. Could be set multiple times and in that case
 # all should succeed.
 # Options: certificate, pam. 
@@ -101,7 +214,7 @@ server-key = /opt/certs/server-key.pem
 # client certificates (public keys) if certificate authentication
 # is set.
 #ca-cert = /path/to/ca.pem
-# -------------- éœ€è¦è¯ä¹¦ç™»é™†çš„éœ€è¦ -------------
+# -------------- ĞèÒªÖ¤ÊéµÇÂ½µÄĞèÒª -------------
 #ca-cert = /etc/ssl/certs/ca.pem
 
 # The object identifier that will be used to read the user ID in the client 
@@ -230,7 +343,7 @@ device = vpns
 predictable-ips = true
 
 # The default domain to be advertised
-# -------- ä¸éœ€è¦è¿™ä¸ª -----------
+# -------- ²»ĞèÒªÕâ¸ö -----------
 # default-domain = example.com
 
 # The pool of addresses that leases will be given from.
@@ -272,7 +385,7 @@ ping-leases = false
 # The number of packets (of MTU size) that are available in
 # the output buffer. The default is low to improve latency.
 # Setting it higher will improve throughput.
-#  ------------ è®¾ç½®é«˜ç¼“å­˜ ------------
+#  ------------ ÉèÖÃ¸ß»º´æ ------------
 output-buffer = 10
 # Routes to be forwarded to the client. If you need the
 # client to forward routes to the server, you may use the 
@@ -287,7 +400,7 @@ output-buffer = 10
 #route = fef4:db8:1000:1001::/64
 
 
-# ---------- æ·»åŠ è‡ªåŠ¨ç¿»å¢™è·¯ç”± -----------
+# ---------- Ìí¼Ó×Ô¶¯·­Ç½Â·ÓÉ -----------
 route = 8.0.0.0/252.0.0.0
 route = 16.0.0.0/255.0.0.0
 route = 23.0.0.0/255.0.0.0
@@ -415,3 +528,9 @@ route = 218.0.0.0/255.0.0.0
 # Option to allow sending arbitrary custom headers to the client after
 # authentication and prior to VPN tunnel establishment.
 #custom-header = "X-My-Header: hi there"
+_EOF_
+
+chmod +x Dockerfile
+docker build -t="ocserv" .
+docker run -d --privileged -p 443:443/udp -p 443:443/tcp ocserv
+rm -rf bin/ certs/ ocserv/

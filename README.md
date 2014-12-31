@@ -1,5 +1,5 @@
 ## 这啥
-相信即使给我一个完整的部署[OpenConnect server](http://www.infradead.org/ocserv/)的教程，即使看懂了，面对不同环境下可能出现的问题，还是相当头疼的。所以对于我这种菜鸟，利用Docker来快速部署VPN就容易很多了。这repo大部分是参考 [Wyatt](http://wppurking.github.io/2014/10/11/use-ocserv-docker-to-enjoy-freedom-internet.html) 的，所以没啥价值，权当自己学习Linux用。
+相信即使给我一个完整的部署 [OpenConnect server](http://www.infradead.org/ocserv/) 的教程，即使看懂了，面对不同环境下可能出现的问题，我还是会相当头疼的。所以对于我这种菜鸟，利用Docker来快速部署VPN就显得容易多了。这repo大部分是参考 [Wyatt](http://wppurking.github.io/2014/10/11/use-ocserv-docker-to-enjoy-freedom-internet.html) 的，所以没啥价值，权当自己学习Linux用。
 
 ## 咋用
 因为 Wyatt 那个的证书模板需要从他那复制到容器里，而且用户名和密码也帮我们初始化了（虽然知道这没什么区别，但处女座是极为不爽这样啊），所以我就用脚本去初始化这些东西了。

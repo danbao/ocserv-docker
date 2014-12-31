@@ -5,7 +5,7 @@
 因为 Wyatt 那个的证书模板需要从他那复制到容器里，而且用户名和密码也帮我们初始化了（虽然知道这没什么区别，但处女座是极为不爽这样啊），所以我就用脚本去初始化这些东西了。
 
 Steps:
-* 安装 [Docker](https://www.docker.com/)和 [Git](http://git-scm.com/download/linux) or 直接使用 [CoreOS](https://coreos.com/)
+* 安装 [Docker](https://www.docker.com/) 和 [Git](http://git-scm.com/download/linux) or 直接使用 [CoreOS](https://coreos.com/)
 * 执行 `cd ~ && git clone https://github.com/aerok/ocserv-docker.git && cd ocserv-docker && chmod +x Install`
 * 执行 `./Install` 按提示添加Server IP和VPN账号，约5分钟后，梯子就搭好了
 * 执行 `docker ps -aq | xargs docker logs` 检查容器内部log，如下log显示VPN运行正常

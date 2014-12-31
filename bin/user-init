@@ -1,0 +1,11 @@
+#!/usr/bin/expect
+set timeout 2
+foreach u [list testUsername] p [list testPassword] {
+    spawn ocpasswd -c /etc/ocserv/ocpasswd $u
+    expect "*password*"
+    send "$p\n"
+    expect "*password*"
+    send "$p\n"
+    expect eof
+}
+exit
